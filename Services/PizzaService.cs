@@ -19,7 +19,7 @@ namespace ContosoPizza.Services
             };
         }
 
-        public static List<Pizza> GetAll => Pizzas;
+        public static List<Pizza> GetAll() => Pizzas;
         public static Pizza? Get(int id) => Pizzas.FirstOrDefault(p => p.Id.Equals(id));
         public static void Add(Pizza pizza)
         {
