@@ -24,24 +24,37 @@ public class PizzaController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Post(Pizza pizza)
+    public IActionResult Create(Pizza pizza)
     {
-        if (!ModelState.IsValid) return BadRequest();
-        PizzaService.Add(pizza);
-        return Ok();
+       PizzaService.Add(pizza);
+        return CreatedAtAction(nameof(Create), new { id = pizza.Id }, pizza);
     }
 
     [HttpPut("{id}")]
-    public IActionResult Put(int id, Pizza pizza)
+    public IActionResult Update(int id, Pizza pizza)
     {
-        PizzaService.Update(pizza);
-        return Ok();
+        if (id != pizza.Id)
+        return BadRequest();
+           
+        var existingPizza = PizzaService.Get(id);
+        if(existingPizza is null)
+            return NotFound();
+    
+        PizzaService.Update(pizza);           
+    
+        return NoContent();
     }
 
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
+        var pizza = PizzaService.Get(id);
+   
+        if (pizza is null)
+            return NotFound();
+        
         PizzaService.Delete(id);
-        return Ok();
+    
+        return NoContent();
     }
 }
